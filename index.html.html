@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Programmed Love - Corazón Real</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            perspective: 1000px; /* لإعطاء تأثير العمق ثلاثي الأبعاد */
+        }
+        .container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            transform-style: preserve-3d;
+        }
+        ._love_word {
+            position: absolute;
+            color: #8b0000; /* لون أحمر دموي داكن */
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0000; /* توهج أحمر مضيء للكلمات */
+            white-space: nowrap;
+            opacity: 0;
+            animation-name: heart-fade;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        /* تأثير الـ Fade والتحرك ثلاثي الأبعاد المحاكي للفيديو */
+        @keyframes heart-fade {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, 0, -300px) scale(0.5);
+            }
+            30% {
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate3d(0, 0, 200px) scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="heart-container"></div>
+
+    <script>
+        const container = document.getElementById('heart-container');
+        const TEXT = "I love you";
+        const NUM_WORDS = 120; // عدد الكلمات لتشكيل قلب ممتلئ وكبير
+
+        // المعادلات الرياضية لرسم شكل قلب متناسق وضخم
+        function heartX(t) {
+            return 16 * Math.pow(Math.sin(t), 3);
+        }
+        function heartY(t) {
+            return 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+        }
+
+        for (let i = 0; i < NUM_WORDS; i++) {
+            const word = document.createElement('span');
+            word.className = '_love_word';
+            word.innerText = TEXT;
+
+            // حساب الزاوية والموقع لكل كلمة
+            const t = (i / NUM_WORDS) * Math.PI * 2;
+            
+            // تكبير الحجم والـ Scale ليطابق الشاشة
+            const scaleX = 15; 
+            const scaleY = 15;
+            
+            const x = heartX(t) * scaleX + 300; // ضبط السنتر
+            const y = -heartY(t) * scaleY + 250; 
+
+            word.style.left = `${x}px`;
+            word.style.top = `${y}px`;
+
+            // إعطاء تأخير (Delay) عشوائي لكل كلمة لكي لا تختفي كلها في نفس اللحظة
+            // هذا ما يصنع تأثير الموجة والتلاشي المتموج (Fade) في الفيديو
+            word.style.animationDelay = `${Math.random() * 4}s`;
+
+            container.appendChild(word);
+        }
+    </script>
+</body>
+</html>
